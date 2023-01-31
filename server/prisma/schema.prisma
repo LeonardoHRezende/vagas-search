@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Job {
+  id              String @id @default(uuid())
+  title           String
+  description     String
+  local           String
+  type            String
+  payment         Float
+  experienceLevel String
+  stack           String
+  companyId       String
+
+  company Company @relation(references: [id], fields: [companyId])
+  Users   User[]
+
+  @@unique([companyId])
+  @@map("jobs")
+}
+
+model Company {
+  id              String @id @default(uuid())
+  name            String
+  webSite         String
+  employersNumber Int
+  descrption      String
+  city            String
+  country         String
+
+  jobs Job[]
+}
+
+model User {
+  id            String @id @default(uuid())
+  name          String
+  age           Int
+  gender        String
+  email         String
+  telephone     String
+  description   String
+  candidatureId String
+
+  experiences       Experience[]
+  academicFormation AcademicFormation[]
+  Habilits          Habilits[]
+
+  candidatures Job @relation(references: [id], fields: [candidatureId])
+
+  @@unique([candidatureId])
+  @@map("users")
+}
+
+model Experience {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  company     String
+  startedAt   DateTime
+  endedAte    DateTime
+  currentJob  Boolean
+  userId      String
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId])
+  @@map("expereinces")
+}
+
+model AcademicFormation {
+  id               String   @id @default(uuid())
+  schoolName       String
+  title            String
+  startedAt        DateTime
+  endedAte         DateTime
+  currentFormation Boolean
+  description      String
+  userId           String
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId])
+}
+
+model Habilits {
+  id     String @id @default(uuid())
+  title  String
+  userId String
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId])
+  @@map("habilits")
+}
