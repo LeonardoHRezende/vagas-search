@@ -1,9 +1,11 @@
 import Express from "express";
-import helloRoute from "../routes/helloRoute"
+import createUser from "../routes/createUser"
+import searchUser from "../routes/searchUser"
 
 const app = Express();
 
-app.use('/', helloRoute);
+app.use('/user', createUser);
+app.use('/user', searchUser);
 
 app.listen(3333, () => {
     console.log('runing')
