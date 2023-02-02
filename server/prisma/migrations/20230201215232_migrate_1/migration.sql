@@ -32,12 +32,12 @@ CREATE TABLE "users" (
     "email" TEXT NOT NULL,
     "telephone" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "candidatureId" TEXT NOT NULL,
-    CONSTRAINT "users_candidatureId_fkey" FOREIGN KEY ("candidatureId") REFERENCES "jobs" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    "candidatureId" TEXT,
+    CONSTRAINT "users_candidatureId_fkey" FOREIGN KEY ("candidatureId") REFERENCES "jobs" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateTable
-CREATE TABLE "Experience" (
+CREATE TABLE "expereinces" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE "Experience" (
     "endedAte" DATETIME NOT NULL,
     "currentJob" BOOLEAN NOT NULL,
     "userId" TEXT NOT NULL,
-    CONSTRAINT "Experience_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "expereinces_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -55,19 +55,18 @@ CREATE TABLE "AcademicFormation" (
     "schoolName" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "startedAt" DATETIME NOT NULL,
-    "endedAte" DATETIME NOT NULL,
+    "endedAt" DATETIME NOT NULL,
     "currentFormation" BOOLEAN NOT NULL,
-    "description" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     CONSTRAINT "AcademicFormation_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
-CREATE TABLE "Habilits" (
+CREATE TABLE "habilits" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    CONSTRAINT "Habilits_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "habilits_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateIndex
@@ -75,3 +74,12 @@ CREATE UNIQUE INDEX "jobs_companyId_key" ON "jobs"("companyId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_candidatureId_key" ON "users"("candidatureId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "expereinces_userId_key" ON "expereinces"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "AcademicFormation_userId_key" ON "AcademicFormation"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "habilits_userId_key" ON "habilits"("userId");

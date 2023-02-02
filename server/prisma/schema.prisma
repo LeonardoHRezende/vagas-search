@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Job {
-  id              String @id @default(uuid())
+  id              String  @id @default(uuid())
   title           String
   description     String
   local           String
@@ -16,12 +16,10 @@ model Job {
   payment         Float
   experienceLevel String
   stack           String
-  companyId       String
+  companyId       String  @unique
+  company         Company @relation(fields: [companyId], references: [id])
+  Users           User[]
 
-  company Company @relation(references: [id], fields: [companyId])
-  Users   User[]
-
-  @@unique([companyId])
   @@map("jobs")
 }
 
@@ -33,27 +31,23 @@ model Company {
   descrption      String
   city            String
   country         String
-
-  jobs Job[]
+  jobs            Job[]
 }
 
 model User {
-  id            String @id @default(uuid())
-  name          String
-  age           Int
-  gender        String
-  email         String
-  telephone     String
-  description   String
-  candidatureId String
-
-  experiences       Experience[]
+  id                String              @id @default(uuid())
+  name              String
+  age               Int
+  gender            String
+  email             String
+  telephone         String
+  description       String
+  candidatureId     String?             @unique
   academicFormation AcademicFormation[]
-  Habilits          Habilits[]
+  experiences       Experience[]
+  habilits          Habilits[]
+  candidatures      Job?                @relation(fields: [candidatureId], references: [id])
 
-  candidatures Job @relation(references: [id], fields: [candidatureId])
-
-  @@unique([candidatureId])
   @@map("users")
 }
 
@@ -63,13 +57,11 @@ model Experience {
   description String
   company     String
   startedAt   DateTime
-  endedAte    DateTime
+  endedAt     DateTime
   currentJob  Boolean
-  userId      String
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
 
-  user User @relation(fields: [userId], references: [id])
-
-  @@unique([userId])
   @@map("expereinces")
 }
 
@@ -78,23 +70,17 @@ model AcademicFormation {
   schoolName       String
   title            String
   startedAt        DateTime
-  endedAte         DateTime
+  endedAt          DateTime
   currentFormation Boolean
-  description      String
-  userId           String
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@unique([userId])
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id])
 }
 
 model Habilits {
   id     String @id @default(uuid())
   title  String
-  userId String
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
 
-  user User @relation(fields: [userId], references: [id])
-
-  @@unique([userId])
   @@map("habilits")
 }
