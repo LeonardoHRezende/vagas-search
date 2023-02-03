@@ -1,5 +1,6 @@
 import { prisma } from "../helpers/prisma";
 import express from "express";
+import createUserValidator from "../helpers/zod/createUserValidator";
 
 const app = express();
 
@@ -13,41 +14,44 @@ app.post('/', async (req, res) => {
         })
     }
 
-    const createUser = await prisma.user.create({
-        data: {
-            name: req?.body?.name,
-            age: req?.body?.age,
-            gender: req?.body?.gender,
-            email: req?.body?.email,
-            telephone: req?.body?.telephone,
-            description: req?.body?.description,
-            habilits: {
-                create: {
-                    title: req?.body?.habilits?.title
-                }
-            },
-            academicFormation: {
-                create: {
-                    title: req?.body?.academicFormation?.title,
-                    schoolName: req?.body?.academicFormation?.schoolName,
-                    startedAt: new Date("2023-01-06T03:00:00.000z"),
-                    endedAt: new Date("2023-01-06T03:00:00.000z"),
-                    currentFormation: req?.body?.academicFormation?.currentFormation,
-                }
-            },
-            experiences: {
-                create: {
-                    company: req?.body?.experiences?.company,
-                    title: req?.body?.experiences?.title,
-                    currentJob: req?.body?.experiences?.currentJob,
-                    startedAt: new Date("2023-01-06T03:00:00.000z"),
-                    endedAt: new Date("2023-01-06T03:00:00.000z"),
-                    description: req?.body?.experiences?.description
+    const userData = await createUserValidator(req?.body);
+    console.log('rota', userData)
+    const createUser =
+        await prisma.user.create({
+            data: {
+                name: userData?.name,
+                age: userData?.age,
+                gender: userData?.gender,
+                email: userData?.email,
+                telephone: userData?.telephone,
+                description: userData?.description,
+                habilits: {
+                    create: {
+                        title: userData?.habilits?.title
+                    }
+                },
+                academicFormation: {
+                    create: {
+                        title: userData?.academicFormation?.title,
+                        schoolName: userData?.academicFormation?.schoolName,
+                        startedAt: new Date("2023-01-06T03:00:00.000z"),
+                        endedAt: new Date("2023-01-06T03:00:00.000z"),
+                        currentFormation: userData?.academicFormation?.currentFormation,
+                    }
+                },
+                experiences: {
+                    create: {
+                        company: userData?.experiences?.company,
+                        title: userData?.experiences?.title,
+                        currentJob: userData?.experiences?.currentJob,
+                        startedAt: new Date("2023-01-06T03:00:00.000z"),
+                        endedAt: new Date("2023-01-06T03:00:00.000z"),
+                        description: userData?.experiences?.description
+                    }
                 }
             }
-        }
-    })
-    res.send(createUser)
+        })
+    res.status(201).json(createUser)
 })
 
 export default app;

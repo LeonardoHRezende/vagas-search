@@ -1,7 +1,9 @@
 import { prisma } from "../helpers/prisma";
-import Express from "express";
+import express from "express";
 
-const app = Express();
+const app = express();
+
+app.use(express.json());
 
 app.get('/', async (req, res) => {
 
