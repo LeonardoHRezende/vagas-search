@@ -43,7 +43,7 @@ CREATE TABLE "expereinces" (
     "description" TEXT NOT NULL,
     "company" TEXT NOT NULL,
     "startedAt" DATETIME NOT NULL,
-    "endedAte" DATETIME NOT NULL,
+    "endedAt" DATETIME NOT NULL,
     "currentJob" BOOLEAN NOT NULL,
     "userId" TEXT NOT NULL,
     CONSTRAINT "expereinces_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
