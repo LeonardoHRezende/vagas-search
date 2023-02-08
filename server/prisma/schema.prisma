@@ -3,10 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 
 model Job {
   id              String  @id @default(uuid())
@@ -53,28 +52,28 @@ model User {
 }
 
 model Experience {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   title       String
   description String
   company     String
   startedAt   DateTime
-  endedAt     DateTime
+  endedAt     DateTime?
   currentJob  Boolean
-  userId      String   @unique
-  user        User     @relation(fields: [userId], references: [id])
+  userId      String    @unique
+  user        User      @relation(fields: [userId], references: [id])
 
-  @@map("expereinces")
+  @@map("experiences")
 }
 
 model AcademicFormation {
-  id               String   @id @default(uuid())
+  id               String    @id @default(uuid())
   schoolName       String
   title            String
   startedAt        DateTime
-  endedAt          DateTime
+  endedAt          DateTime?
   currentFormation Boolean
-  userId           String   @unique
-  user             User     @relation(fields: [userId], references: [id])
+  userId           String    @unique
+  user             User      @relation(fields: [userId], references: [id])
 }
 
 model Habilits {

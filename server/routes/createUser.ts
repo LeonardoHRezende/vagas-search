@@ -13,8 +13,10 @@ app.post('/', async (req, res) => {
             response: 'Data is missing'
         })
     }
-    
+
     const userData = await createUserValidator(req?.body);
+
+    console.log(req.body)
 
     if (userData.success) {
         const createUser =
@@ -26,30 +28,38 @@ app.post('/', async (req, res) => {
                     email: req?.body?.email,
                     telephone: req?.body?.telephone,
                     description: req?.body?.description,
-                    habilits: {
-                        create: {
-                            title: req?.body?.habilits?.title
+                    ...(req?.body?.habilits && {
+                        habilits: {
+                            createMany: [
+                                {
+                                    title: req?.body?.habilits.title
+                                }
+                            ]
                         }
-                    },
-                    academicFormation: {
-                        create: {
-                            title: req?.body?.academicFormation?.title,
-                            schoolName: req?.body?.academicFormation?.schoolName,
-                            startedAt: new Date("2023-01-06T03:00:00.000z"),
-                            endedAt: new Date("2023-01-06T03:00:00.000z"),
-                            currentFormation: req?.body?.academicFormation?.currentFormation,
+                    }),
+                    ...(req?.body?.academicFormation && {
+                        academicFormation: {
+                            create: [{
+                                title: req?.body?.academicFormation?.title,
+                                schoolName: req?.body?.academicFormation?.schoolName,
+                                startedAt: req?.body?.academicFormation?.startedAt,
+                                endedAt: req?.body?.academicFormation?.endedAt,
+                                currentFormation: req?.body?.academicFormation?.currentFormation,
+                            }]
                         }
-                    },
-                    experiences: {
-                        create: {
-                            company: req?.body?.experiences?.company,
-                            title: req?.body?.experiences?.title,
-                            currentJob: req?.body?.experiences?.currentJob,
-                            startedAt: new Date("2023-01-06T03:00:00.000z"),
-                            endedAt: new Date("2023-01-06T03:00:00.000z"),
-                            description: req?.body?.experiences?.description
+                    }),
+                    ...(req?.body?.exeperience && {
+                        experiences: {
+                            create: [{
+                                company: req?.body?.experiences?.company,
+                                title: req?.body?.experiences?.title,
+                                currentJob: req?.body?.experiences?.currentJob,
+                                startedAt: req?.body?.experiences?.startedAt,
+                                endedAt: req?.body?.experiences?.endedAt,
+                                description: req?.body?.experiences?.description
+                            }]
                         }
-                    }
+                    })
                 }
             })
         res.status(201).json(createUser)
